@@ -1,19 +1,19 @@
 import duckdb
 import os
 
-# Pełna ścieżka do pliku bazy danych
+# Full path to the database file
 db_path = os.path.join(os.path.dirname(__file__), '../data/nyt_articles.db')
 db_path = os.path.abspath(db_path)
 
 con = duckdb.connect(database=db_path)
 
-# Zdropuj tabelę articles
+# Drop the 'articles' table
 con.execute('DROP TABLE IF EXISTS articles')
 
-# Zdropuj tabelę transformed_articles
+# Drop the 'transformed_articles' table
 con.execute('DROP TABLE IF EXISTS transformed_articles')
 
-# Usunięcie istniejącej tabeli, jeśli istnieje
+# Drop the 'headline_analysis' table if it exists
 con.execute('DROP TABLE IF EXISTS headline_analysis')
 
 print("All tables dropped successfully.")
