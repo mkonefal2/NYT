@@ -9,7 +9,7 @@ This project implements an ETL pipeline to fetch and analyze articles from the N
 NYT/
 ├── .github/
 │   └── workflows/
-│   └── ci.yml
+│       └── ci.yml
 ├── data/
 │   ├── common_words_YYYY-MM-DD.csv
 │   ├── headline_analysis_YYYY-MM-DD.csv
@@ -20,20 +20,25 @@ NYT/
 ├── plots/
 │   └── common_words_plot_YYYY-MM-DD.png
 ├── scripts/
+│   ├── __pycache__/
+│   ├── Choose_Month/
+│   │   └── articles.py
+│   ├── Generate_Charts/
+│   │   ├── bar_chart.py
+│   │   └── generate_wordcloud.py
+│   ├── Last_Month/
+│   │   ├── last_month_articles.py
+│   │   ├── last_month_transform_headlines.py
+│   │   └── run_etl_last_month.py
+│   ├── plots/
 │   ├── analyze_headlines.py
-│   ├── bar_chart.py
-│   ├── drop_all_tables.py
-│   ├── last_month_articles.py
-│   ├── run_etl.py
-│   └── transform_headlines.py
+│   └── drop_all_tables.py
 ├── sql/
 ├── tests/
-│   └── test_etl_scripts.py
 ├── .env
 ├── .gitignore
 ├── README.md
-├── requirements.txt
-└── ci.yml
+└── requirements.txt
 ```
 
 ## Getting Started
