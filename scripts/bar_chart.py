@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 # Load DataFrame from CSV file
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-csv_path = os.path.join(os.path.dirname(__file__), f"../data/common_words_{current_date}.csv")
+csv_path = os.path.join(os.path.dirname(__file__), f"C:\\Projekty\\NYT\\data\\common_words_{current_date}.csv")
 common_words_df = pd.read_csv(csv_path)
 # Filter for the top 10 most common words
 common_words_df = common_words_df.nlargest(10, 'count')

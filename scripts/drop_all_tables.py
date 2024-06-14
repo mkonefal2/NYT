@@ -2,7 +2,7 @@ import duckdb
 import os
 
 # Full path to the database file
-db_path = os.path.join(os.path.dirname(__file__), '../data/nyt_articles.db')
+db_path = os.path.join(os.path.dirname(__file__), 'C:\\Projekty\\NYT\\data\\nyt_articles.db')
 db_path = os.path.abspath(db_path)
 
 con = duckdb.connect(database=db_path)

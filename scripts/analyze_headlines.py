@@ -5,7 +5,7 @@ import re
 from collections import Counter
 import datetime
 # Full path to the database file
-db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data/nyt_articles.db'))
+db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'C:\\Projekty\\NYT\\data\\nyt_articles.db'))
 
 con = duckdb.connect(database=db_path)
 
@@ -22,6 +22,7 @@ words = re.findall(r'\b\w+\b', all_words.lower())
 
 # Define a list of stopwords
 stopwords = {'the', 'a', 's', 'to', 'in','its','be' ,'has', 'it', 'and', 'of', 'for', 'on', 'with','t' , 'after','this', 'what', 'as', 'is', 'that', 'at', 'by', 'an', 'u', 'c', 'n', 'k' ,'i' , 'how' , 'no' , 'are' , 'from', 'you'}
+stopwords.update([str(i) for i in range(10)])
 # Filter out stopwords from the words
 filtered_words = [word for word in words if word not in stopwords]
 

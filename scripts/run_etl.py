@@ -2,10 +2,11 @@ import subprocess
 
 # List of scripts to run
 scripts = [
-    "scripts/last_month_articles.py",
-    "scripts/transform_headlines.py",
-    "scripts/analyze_headlines.py",
-    "scripts/bar_chart.py"
+    "C:\\Projekty\\NYT\\scripts\\Last_Month\\last_month_articles.py",
+    "C:\\Projekty\\NYT\\scripts\\Last_Month\\last_month_transform_headlines.py",
+    "C:\\Projekty\\NYT\\scripts\\analyze_headlines.py",
+    "C:\\Projekty\\NYT\\scripts\\bar_chart.py",
+    "C:\\Projekty\\NYT\\scripts\\generate_wordcloud.py"
 ]
 
 all_success = True
@@ -25,3 +26,4 @@ if all_success:
     print("ETL process completed successfully.")
 else:
     print("ETL process encountered an error.")
+   

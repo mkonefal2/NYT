@@ -4,13 +4,26 @@ import duckdb
 import os
 import logging
 import datetime
+from dotenv import load_dotenv
+import argparse  # Import argparse module
 
-# API key and URL
-api_key = 'your_api_key_here'
-current_date = datetime.date.today()
-previous_month = current_date.replace(day=1) - datetime.timedelta(days=1)
-year = previous_month.year
-month = previous_month.month
+# Setup argument parser
+parser = argparse.ArgumentParser(description='Download articles from a specified month and year.')
+parser.add_argument('--year', type=int, help='Year of the articles to download', default=datetime.date.today().year)
+parser.add_argument('--month', type=int, help='Month of the articles to download', default=(datetime.date.today().replace(day=1) - datetime.timedelta(days=1)).month)
+args = parser.parse_args()
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get the API key from environment variables
+api_key = os.getenv('NYT_API_KEY')
+if not api_key:
+    raise ValueError("No API key provided. Please set the NYT_API_KEY environment variable.")
+
+# Use arguments for year and month
+year = args.year
+month = args.month
 url = f'https://api.nytimes.com/svc/archive/v1/{year}/{month}.json?api-key={api_key}'
 
 # Send GET request to the API
@@ -30,13 +43,9 @@ df = df.astype(str)
 db_path = os.path.join(os.path.dirname(__file__), '../data/nyt_articles.db')
 db_path = os.path.abspath(db_path)
 
-
-
 # Setup logging with Date and Time
 log_directory = os.path.join(os.path.dirname(__file__), '../logs')
 os.makedirs(log_directory, exist_ok=True)  # Create log directory if it doesn't exist
-log_file_path = os.path.join(log_directory, 'data_fetch.log')
-logging.basicConfig(filename=log_file_path, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Connect to DuckDB
 logging.info("Connecting to DuckDB...")
@@ -60,4 +69,3 @@ if not df_filtered.empty:
     logging.info(f"Added {len(df_filtered)} new articles to the DuckDB database.")
 else:
     logging.info("No new articles to add.")
-
