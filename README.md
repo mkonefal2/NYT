@@ -53,7 +53,7 @@ NYT/
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/mkonefal2/NYT-Live.git
+git clone https://github.com/mkonefal2/NYT.git
 cd NYT-Live
 ```
 
@@ -81,9 +81,11 @@ NYT_API_KEY=your_actual_api_key_here
 To run the ETL pipeline, execute the following scripts in order:
 
 ```bash
-python scripts/last_month_articles.py
-python scripts/transform_headlines.py
-python scripts/analyze_headlines.py
-python scripts/bar_chart.py
+python   scripts\\Last_Month\\last_month_articles.py",
+python   scripts\\Last_Month\\last_month_transform_headlines.py",
+python   scripts\\analyze_headlines.py",
+python   scripts\\Generate_Charts\\bar_chart.py",
+python   scripts\\Generate_Charts\\generate_wordcloud.py"
 ```
+
 
