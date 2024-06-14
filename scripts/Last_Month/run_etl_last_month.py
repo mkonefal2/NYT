@@ -5,8 +5,8 @@ scripts = [
     "C:\\Projekty\\NYT\\scripts\\Last_Month\\last_month_articles.py",
     "C:\\Projekty\\NYT\\scripts\\Last_Month\\last_month_transform_headlines.py",
     "C:\\Projekty\\NYT\\scripts\\analyze_headlines.py",
-    "C:\\Projekty\\NYT\\scripts\\bar_chart.py",
-    "C:\\Projekty\\NYT\\scripts\\generate_wordcloud.py"
+    "C:\\Projekty\\NYT\\scripts\\Generate_Charts\\bar_chart.py",
+    "C:\\Projekty\\NYT\\scripts\\Generate_Charts\\generate_wordcloud.py"
 ]
 
 all_success = True
@@ -21,7 +21,7 @@ for script in scripts:
     else:
         print(f"Successfully ran {script}")
         print(result.stdout)
-
+ 
 if all_success:
     print("ETL process completed successfully.")
 else:

@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import datetime
-
+import re
 import matplotlib.pyplot as plt
 
 # Load DataFrame from CSV file
@@ -11,7 +11,7 @@ common_words_df = pd.read_csv(csv_path)
 # Filter for the top 10 most common words
 common_words_df = common_words_df.nlargest(10, 'count')
 # Generate a bar chart with a darker background
-fig, ax = plt.subplots(figsize=(10, 8))
+fig, ax = plt.subplots(figsize=(11.52, 6.48))
 fig.patch.set_facecolor('#232136')  # Set the background color for the entire figure
 ax.set_facecolor('#232136')  # Set the background color for the chart area
 

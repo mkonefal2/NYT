@@ -13,7 +13,7 @@ common_words_df = pd.read_csv(csv_path)
 words_dict = common_words_df.set_index('word')['count'].to_dict()
 
 # Utwórz obiekt WordCloud
-wordcloud = WordCloud(width=800, height=400, background_color='#232136').generate_from_frequencies(words_dict)
+wordcloud = WordCloud(width=1152, height=648, background_color='#232136').generate_from_frequencies(words_dict)
 
 # Wyświetl chmurę słów
 plt.figure(figsize=(10, 8))
