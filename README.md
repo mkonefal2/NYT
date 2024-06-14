@@ -4,6 +4,7 @@
     This project implements an ETL pipeline to fetch and analyze articles from the New York Times API.
 
     ## Project Structure
+    
 
     ```
     NYT/
@@ -82,8 +83,5 @@
     python scripts/bar_chart.py
     ```
 
-    ## CI/CD
-
-    This project uses GitHub Actions for continuous integration and continuous deployment. The workflow is defined in `.github/workflows/ci.yml`.
 
 
