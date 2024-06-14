@@ -8,7 +8,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *' # Uruchamianie codziennie o północy
 
 jobs:
   build:
@@ -28,6 +28,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Set up environment variables
+      run: echo "NYT_API_KEY=${{ secrets.NYT_API_KEY }}" >> $GITHUB_ENV
+
     - name: Run ETL scripts
       run: |
         python scripts/last_month_articles.py
@@ -37,3 +40,4 @@ jobs:
 
     - name: Run tests
       run: |
+        pytest
