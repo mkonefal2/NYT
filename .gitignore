@@ -1,3 +1,4 @@
 # Ignore .env file
 .env
-.github
+tests
+notebooks/view_all_articles.ipynb
