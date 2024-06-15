@@ -4,33 +4,47 @@ import pandas as pd
 import re
 from collections import Counter
 import datetime
-# Full path to the database file
-db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'C:\\Projekty\\NYT\\data\\nyt_articles.db'))
+from dateutil.relativedelta import relativedelta
 
-con = duckdb.connect(database=db_path)
+class HeadlineAnalyzer:
+    def __init__(self, db_path, output_dir):
+        self.db_path = os.path.abspath(db_path)
+        self.output_dir = output_dir
+        self.con = duckdb.connect(database=self.db_path)
+        self.stopwords = {'the', 'a', 's', 'to', 'in','its','be' ,'has', 'it', 'and', 'of', 'for', 'on', 'with','t' , 'after','this', 'what', 'as', 'is', 'that', 'at', 'by', 'an', 'u', 'c', 'n', 'k' ,'i' , 'how' , 'no' , 'are' , 'from', 'you'}
+        self.stopwords.update([str(i) for i in range(10)])
 
-# Analyzing the most frequently occurring words in the headlines
-headlines = con.execute('SELECT headline FROM headline_analysis').fetchall()
-headlines = [str(headline[0]) for headline in headlines if headline[0] is not None]
+    def fetch_headlines(self):
+        headlines = self.con.execute('SELECT headline FROM lastm_headline_analysis').fetchall()
+        return [str(headline[0]) for headline in headlines if headline[0] is not None]
 
-# Getting the current date and formatting it as YYYY-MM-DD
-current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    def tokenize_and_clean(self, headlines):
+        all_words = ' '.join(headlines)
+        words = re.findall(r'\b\w+\b', all_words.lower())
+        return [word for word in words if word not in self.stopwords]
 
-# Tokenizing and cleaning the headline text
-all_words = ' '.join(headlines)
-words = re.findall(r'\b\w+\b', all_words.lower())
+    def analyze(self):
+        headlines = self.fetch_headlines()
+        words = self.tokenize_and_clean(headlines)
+        word_count = Counter(words)
+        common_words = pd.DataFrame(word_count.most_common(200), columns=['word', 'count'])
 
-# Define a list of stopwords
-stopwords = {'the', 'a', 's', 'to', 'in','its','be' ,'has', 'it', 'and', 'of', 'for', 'on', 'with','t' , 'after','this', 'what', 'as', 'is', 'that', 'at', 'by', 'an', 'u', 'c', 'n', 'k' ,'i' , 'how' , 'no' , 'are' , 'from', 'you'}
-stopwords.update([str(i) for i in range(10)])
-# Filter out stopwords from the words
-filtered_words = [word for word in words if word not in stopwords]
+        # Calculate the date for the previous month
+        previous_month_date = datetime.datetime.now() - relativedelta(months=1)
+        # Format the date to include only year and month
+        current_date = previous_month_date.strftime("%Y-%m")
+        output_file = os.path.join(self.output_dir, f"common_words_{current_date}.csv")
+        common_words.to_csv(output_file, index=False)
 
-word_count = Counter(filtered_words)
-common_words = pd.DataFrame(word_count.most_common(200), columns=['word', 'count'])
-# Save the DataFrame to a CSV file
-common_words.to_csv(os.path.join(os.path.dirname(__file__), f"../data/common_words_{current_date}.csv"), index=False)
+        print(f"Data saved to {output_file}")
 
+    def close_connection(self):
+        self.con.close()
 
-# Save the transformed data to a CSV file
-print(f"Data saved to {os.path.join(os.path.dirname(__file__), f'../data/common_words_{current_date}.csv')}")
+if __name__ == '__main__':
+    db_path = r"C:\Projekty\NYT\data\nyt_articles.db"
+    output_dir = os.path.join(os.path.dirname(__file__), '../data')
+
+    analyzer = HeadlineAnalyzer(db_path, output_dir)
+    analyzer.analyze()
+    analyzer.close_connection()
