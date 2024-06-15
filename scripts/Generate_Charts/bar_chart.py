@@ -1,37 +1,48 @@
 import pandas as pd
 import os
 import datetime
-import re
 import matplotlib.pyplot as plt
 
-# Load DataFrame from CSV file
-current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-csv_path = os.path.join(os.path.dirname(__file__), f"C:\\Projekty\\NYT\\data\\common_words_{current_date}.csv")
-common_words_df = pd.read_csv(csv_path)
-# Filter for the top 10 most common words
-common_words_df = common_words_df.nlargest(10, 'count')
-# Generate a bar chart with a darker background
-fig, ax = plt.subplots(figsize=(11.52, 6.48))
-fig.patch.set_facecolor('#232136')  # Set the background color for the entire figure
-ax.set_facecolor('#232136')  # Set the background color for the chart area
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
-plt.bar(common_words_df['word'], common_words_df['count'], color='#ec9b99')
-plt.xlabel('Words', color='white')
-plt.ylabel('Count', color='white')
-plt.xticks(rotation=45, color='white')
-plt.yticks(color='white')
-plt.title('Most Common Words in NYT Headlines', color='white')
-plt.tight_layout()
+class BarChartGenerator:
+    def __init__(self, csv_dir, output_dir):
+        one_month_ago = datetime.now() - relativedelta(months=1)
+        self.current_date = one_month_ago.strftime("%Y-%m")  # Format daty zawierający rok i miesiąc
+        self.csv_path = os.path.join(csv_dir, f"common_words_{self.current_date}.csv")
+        self.output_dir = output_dir
 
-# Save the chart to a PNG file in the `plots` directory
-plots_dir = os.path.join(os.path.dirname(__file__), f"../plots")
-if not os.path.exists(plots_dir):
-    os.makedirs(plots_dir)
-plot_path = os.path.join(plots_dir, f"common_words_plot_{current_date}.png")
+    def load_data(self):
+        return pd.read_csv(self.csv_path)
 
-# Save the chart to a PNG file with a dark background
-plt.savefig(plot_path, facecolor=fig.get_facecolor())
+    def generate_chart(self, data):
+        data = data.nlargest(10, 'count')
+        fig, ax = plt.subplots(figsize=(11.52, 6.48))
+        fig.patch.set_facecolor('#232136')
+        ax.set_facecolor('#232136')
 
-plt.savefig(plot_path)
+        plt.bar(data['word'], data['count'], color='#ec9b99')
+        plt.xlabel('Words', color='white')
+        plt.ylabel('Count', color='white')
+        plt.xticks(rotation=45, color='white')
+        plt.yticks(color='white')
+        plt.title('Most Common Words in NYT Headlines', color='white')
+        plt.tight_layout()
 
-print(f"Plot saved to {plot_path}")
+        if not os.path.exists(self.output_dir):
+            os.makedirs(self.output_dir)
+        plot_path = os.path.join(self.output_dir, f"common_words_plot_{self.current_date}.png")
+        plt.savefig(plot_path, facecolor=fig.get_facecolor())
+        print(f"Plot saved to {plot_path}")
+
+    def run(self):
+        data = self.load_data()
+        self.generate_chart(data)
+
+if __name__ == '__main__':
+    csv_dir = r"C:\Projekty\NYT\data"
+    output_dir = os.path.join(os.path.dirname(__file__), '../plots')
+
+    generator = BarChartGenerator(csv_dir, output_dir)
+    generator.run()

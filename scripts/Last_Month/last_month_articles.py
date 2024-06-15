@@ -6,66 +6,102 @@ import logging
 import datetime
 from dotenv import load_dotenv
 
+class NYTArticleETL:
+    def __init__(self, dotenv_path, db_path, log_directory):
+        self.dotenv_path = dotenv_path
+        self.db_path = os.path.abspath(db_path)
+        self.log_directory = log_directory
+        self.api_key = self.load_api_key()
+        self.setup_logging()
 
-# Ustawienie ścieżki do pliku .env znajdującego się folder wyżej
-dotenv_path = 'c:\\Projekty\\NYT\\.env'
+    def load_api_key(self):
+        load_dotenv(self.dotenv_path)
+        api_key = os.getenv('NYT_API_KEY')
+        if not api_key:
+            raise ValueError("No API key provided. Please set the NYT_API_KEY environment variable.")
+        return api_key
 
-# Załadowanie zmiennych środowiskowych z pliku .env
-load_dotenv(dotenv_path)
+    def setup_logging(self):
+        os.makedirs(self.log_directory, exist_ok=True)
+        log_file_path = os.path.join(self.log_directory, 'data_fetch.log')
+        logging.basicConfig(filename=log_file_path, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Get the API key from environment variables
-api_key = os.getenv('NYT_API_KEY')
-if not api_key:
-    raise ValueError("No API key provided. Please set the NYT_API_KEY environment variable.")
-##
-current_date = datetime.date.today()
-previous_month = current_date.replace(day=1) - datetime.timedelta(days=1)
-year = previous_month.year
-month = previous_month.month
-url = f'https://api.nytimes.com/svc/archive/v1/{year}/{month}.json?api-key={api_key}'
+    def get_previous_month(self):
+        current_date = datetime.date.today()
+        first_day_of_current_month = current_date.replace(day=1)
+        last_day_of_previous_month = first_day_of_current_month - datetime.timedelta(days=1)
+        return last_day_of_previous_month.year, last_day_of_previous_month.month
 
-# Send GET request to the API
-response = requests.get(url)
-data = response.json()
+    def fetch_articles(self):
+        year, month = self.get_previous_month()
+        url = f'https://api.nytimes.com/svc/archive/v1/{year}/{month}.json?api-key={self.api_key}'
+        response = requests.get(url)
+        data = response.json()
+        articles = data['response']['docs']
+        return pd.DataFrame(articles).astype(str)
 
-# Extract articles from the response data
-articles = data['response']['docs']
+    def ensure_table_exists(self, con):
+        logging.info("Ensuring the articles table exists...")
+        con.execute('''
+            CREATE TABLE IF NOT EXISTS articles (
+                _id TEXT PRIMARY KEY,
+                web_url TEXT,
+                snippet TEXT,
+                lead_paragraph TEXT,
+                abstract TEXT,
+                source TEXT,
+                headline TEXT,
+                pub_date TIMESTAMP,
+                document_type TEXT,
+                news_desk TEXT,
+                type_of_material TEXT,
+                word_count INTEGER,
+                uri TEXT
+            )
+        ''')
+        logging.info("Articles table ensured.")
 
-# Create a DataFrame from the articles data
-df = pd.DataFrame(articles)
+    def filter_existing_articles(self, con, df):
+        logging.info("Filtering out articles that already exist in the database...")
+        existing_ids = con.execute('SELECT _id FROM articles').fetchdf()['_id'].tolist()
+        df_filtered = df[~df['_id'].isin(existing_ids)]
+        logging.info(f"Filtered articles. {len(df_filtered)} new articles found.")
+        return df_filtered
 
-# Convert all columns to string type
-df = df.astype(str)
+    def clean_dataframe(self, df):
+        # Extract the 'main' field from the 'headline' column
+        df['headline'] = df['headline'].apply(lambda x: eval(x).get('main') if x else '')
+        
+        columns_to_keep = ['_id', 'web_url', 'snippet', 'lead_paragraph', 'abstract', 'source', 
+                           'headline', 'pub_date', 'document_type', 'news_desk',  
+                            'type_of_material', 'word_count', 'uri']
+        return df[columns_to_keep]
 
-# Full path to the database file
-db_path = os.path.join(os.path.dirname(__file__), 'C:\\Projekty\\NYT\\data\\nyt_articles.db')
-db_path = os.path.abspath(db_path)
+    def insert_articles(self, con, df_filtered):
+        df_filtered = self.clean_dataframe(df_filtered)
+        if not df_filtered.empty:
+            con.execute('INSERT INTO articles SELECT * FROM df_filtered')
+            logging.info(f"Added {len(df_filtered)} new articles to the DuckDB database.")
+        else:
+            logging.info("No new articles to add.")
 
-# Setup logging with Date and Time
-log_directory = os.path.join(os.path.dirname(__file__), '../../logs')
-os.makedirs(log_directory, exist_ok=True)  # Create log directory if it doesn't exist
-log_file_path = os.path.join(log_directory, 'data_fetch.log')
-logging.basicConfig(filename=log_file_path, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    def run(self):
+        logging.info("Connecting to DuckDB...")
+        con = duckdb.connect(database=self.db_path)
+        logging.info("Connected to DuckDB.")
 
-# Connect to DuckDB
-logging.info("Connecting to DuckDB...")
-con = duckdb.connect(database=db_path)
-logging.info("Connected to DuckDB.")
+        self.ensure_table_exists(con)
 
-# Ensure the articles table exists
-logging.info("Ensuring the articles table exists...")
-con.execute('CREATE TABLE IF NOT EXISTS articles AS SELECT * FROM df WHERE FALSE')
-logging.info("Articles table ensured.")
+        df = self.fetch_articles()
+        df_filtered = self.filter_existing_articles(con, df)
+        self.insert_articles(con, df_filtered)
+        
+        con.close()
 
-# Filter out articles that already exist in the database
-logging.info("Filtering out articles that already exist in the database...")
-existing_ids = con.execute('SELECT _id FROM articles').fetchdf()['_id'].tolist()
-df_filtered = df[~df['_id'].isin(existing_ids)]
-logging.info(f"Filtered articles. {len(df_filtered)} new articles found.")
+if __name__ == '__main__':
+    dotenv_path = 'C:\\Projekty\\NYT\\.env'
+    db_path = 'C:\\Projekty\\NYT\\data\\nyt_articles.db'
+    log_directory = 'C:\\Projekty\\NYT\\logs'
 
-# Insert new articles into the database
-if not df_filtered.empty:
-    con.execute('INSERT INTO articles SELECT * FROM df_filtered')
-    logging.info(f"Added {len(df_filtered)} new articles to the DuckDB database.")
-else:
-    logging.info("No new articles to add.")
+    etl = NYTArticleETL(dotenv_path, db_path, log_directory)
+    etl.run()

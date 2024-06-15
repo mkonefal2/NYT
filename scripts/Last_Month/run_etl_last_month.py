@@ -26,4 +26,4 @@ if all_success:
     print("ETL process completed successfully.")
 else:
     print("ETL process encountered an error.")
-   
+    
