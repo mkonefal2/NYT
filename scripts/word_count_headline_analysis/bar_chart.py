@@ -23,8 +23,8 @@ class BarChartGenerator:
         return data
 
     def generate_chart(self, data):
-        data = data.nlargest(10, 'count')
-        fig, ax = plt.subplots(figsize=(11.52, 6.48))
+        data = data.nlargest(10, 'count') 
+        fig, ax = plt.subplots(figsize=(11.52, 6.48)) 
         fig.patch.set_facecolor('#232136')
         ax.set_facecolor('#232136')
 
@@ -33,7 +33,8 @@ class BarChartGenerator:
         plt.ylabel('Count', color='white')
         plt.xticks(rotation=45, color='white')
         plt.yticks(color='white')
-        plt.title('Most Common Words in NYT Headlines', color='white')
+        # Dodanie roku i miesiąca do tytułu
+        plt.title(f'Most Common Words in NYT Headlines for {self.month:02d}/{self.year}', color='white')
         plt.tight_layout()
 
         if not os.path.exists(self.output_dir):

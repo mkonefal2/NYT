@@ -2,6 +2,7 @@ import subprocess
 import os
 import argparse
 import datetime
+import time
 
 def run_script(script, year, month):
     result = subprocess.run(["python", script, str(year), str(month)], capture_output=True, text=True)
@@ -46,7 +47,7 @@ if __name__ == '__main__':
         if not success:
             all_success = False
             break
-
+        time.sleep(5)  # Opóźnienie 15 sekund przed uruchomieniem następnego skryptu
     if all_success:
         print("ETL process completed successfully.")
     else:

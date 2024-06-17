@@ -70,7 +70,7 @@ if __name__ == '__main__':
     parser.add_argument('year', type=int, help='Year of the articles')
     parser.add_argument('month', type=int, help='Month of the articles')
     parser.add_argument('--db_path', type=str, default='C:\\Projekty\\NYT\\data\\nyt_articles.db', help='Path to the DuckDB database')
-    parser.add_argument('--output_dir', type=str, default='C:\\Projekty\\NYT\\output', help='Directory to save the output CSV')
+    parser.add_argument('--output_dir', type=str, default='C:\\Projekty\\NYT\\data', help='Directory to save the output CSV')
 
     args = parser.parse_args()
     transform_data(args.year, args.month, args.db_path, args.output_dir)
