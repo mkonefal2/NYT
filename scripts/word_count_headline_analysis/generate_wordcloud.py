@@ -27,13 +27,18 @@ class WordCloudGenerator:
         word_freq = {row['word']: row['count'] for index, row in df.iterrows()}
         wordcloud = WordCloud(width=1600, height=800, background_color="#232136", mode="RGBA").generate_from_frequencies(word_freq)
 
-        plt.figure(figsize=(20, 10), dpi=100)
+        # Ustawienie koloru tła dla marginesu
+        plt.figure(figsize=(10, 6), facecolor="#232136")
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis('off')
+        
+        # Przesunięcie tekstu z datą niżej
+        plt.text(0, wordcloud.height + 20, f"Date: {self.month}/{self.year}", fontsize=10, color='gray')
 
         os.makedirs(self.output_dir, exist_ok=True)
         output_path = os.path.join(self.output_dir, f'common_words_cloud_{self.year}_{self.month}.png')
-        plt.savefig(output_path, format='png', transparent=True, bbox_inches='tight', pad_inches=0)
+        # Dodanie facecolor do plt.savefig, aby zapewnić, że margines zostanie zapisany z odpowiednim kolorem tła
+        plt.savefig(output_path, format="png", bbox_inches='tight', pad_inches=0.2, facecolor="#232136")  # pad_inches około 0.5 cm
         plt.close()
         print(f"Word cloud saved to {output_path}")
 
