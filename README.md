@@ -7,26 +7,56 @@ This project implements an ETL pipeline to fetch and analyze articles from the N
 
 ```
 NYT/
-├── Choose_Month/
-│   └── articles.py
-├── Generate_Charts/
-│   ├── bar_chart.py
-│   └── generate_wordcloud.py
-├── Last_Month/
-│   ├── last_month_articles.py
-│   ├── last_month_transform_headlines.py
-│   └── run_etl_last_month.py
+│
+├── app/
+│   ├── __pycache__/
+│   ├── templates/
+│   │   ├── base.html
+│   │   ├── data.html
+│   │   ├── etl.html
+│   │   ├── index.html
+│   ├── __init__.py
+│   ├── routes.py
+│
 ├── data/
-│   ├── common_words_YYYY-MM-DD.csv
-│   └── nyt_articles.db
+│   ├── common_words_2023-12.csv
+│   ├── common_words_2024-05.csv
+│   ├── lastm_headline_analysis_2024-05.csv
+│   ├── nyt_articles.db
+│
 ├── logs/
-│   └── data_fetch.log
-├── plots/
-│   ├── common_words_plot_YYYY-MM-DD.png
-│   └── common_words_cloud_YYYY-MM-DD.png
-├── analyze_headlines.py
-├── drop_all_tables.py
-└── README.md
+│   ├── data_fetch.log
+│
+├── notebooks/
+│   ├── view_all_articles.ipynb
+│
+├── scripts/
+│   ├── __pycache__/
+│   ├── word_count_headline_analysis/
+│   │   ├── analyze_headlines.py
+│   ├── articles.py
+│   ├── bar_chart.py
+│   ├── generate_wordcloud.py
+│   ├── run_etl.py
+│   ├── transform_headlines.py
+│   ├── drop_all_tables.py
+│
+├── sql/
+│
+├── static/
+│   ├── css/
+│   │   ├── styles.css
+│   │   ├── test.css
+│   ├── plots/
+│       ├── common_words_cloud_YYYY_M.png
+│       ├── common_words_plot_YYYY_M.png
+│
+├── .env
+├── .gitignore
+├── README.md
+├── requirements.txt
+├── run.py
+
 ```
 
 ## Getting Started
@@ -69,9 +99,15 @@ NYT_API_KEY=your_actual_api_key_here
 To run the ETL pipeline for last month, execute the following script:
 
 ```bash
-python   run_etl_last_month.py
+python  ./scripts/word_count_headline_analysis/run_etl.py
 ```
 
-Soon will implement more options
+Output will be visible in :
+```bash
+./static/plots/
+```
 
-
+You can also run web app 
+```
+python ./scripts/run.py
+```
