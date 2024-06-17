@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Run ETL</h1>
+<form method="post">
+    <label for="year">Year (YYYY):</label>
+    <input type="text" id="year" name="year" required><br>
+    <label for="month">Month (MM):</label>
+    <input type="text" id="month" name="month" required><br>
+    <button type="submit">Run ETL</button>
+</form>
+{% endblock %}
