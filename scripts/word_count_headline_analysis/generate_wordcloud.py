@@ -36,7 +36,7 @@ class WordCloudGenerator:
         plt.text(0, wordcloud.height + 20, f"Date: {self.month}/{self.year}", fontsize=10, color='gray')
 
         os.makedirs(self.output_dir, exist_ok=True)
-        output_path = os.path.join(self.output_dir, f'common_words_cloud_{self.year}_{self.month}.png')
+        output_path = os.path.join(self.output_dir, f'common_words_cloud_{self.year}_{self.month:02d}.png')
         # Dodanie facecolor do plt.savefig, aby zapewnić, że margines zostanie zapisany z odpowiednim kolorem tła
         plt.savefig(output_path, format="png", bbox_inches='tight', pad_inches=0.2, facecolor="#232136")  # pad_inches około 0.5 cm
         plt.close()

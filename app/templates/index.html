@@ -3,14 +3,14 @@
 {% block content %}
 <div class="container mt-5">
     <h1 class="mb-4">NYT Articles Dashboard</h1>
-    <div class="dashboard">
-        <div class="dashboard-item">
+    <div class="row">
+        <div class="col-md-6 dashboard-item">
             <h2>Word Cloud Last Month</h2>
-            <img src="{{ url_for('static', filename='plots/' ~ wordcloud_filename) }}" alt="Word Cloud Last Month" class="chart-img">
+            <iframe src="{{ url_for('static', filename=wordcloud_filename) }}" width="100%" height="400px" frameborder="0"></iframe>
         </div>
-        <div class="dashboard-item">
+        <div class="col-md-6 dashboard-item">
             <h2>Line Chart Last Month</h2>
-            <img src="{{ url_for('static', filename='plots/' ~ linechart_filename) }}" alt="Line Chart Last Month" class="chart-img">
+            <iframe src="{{ url_for('static', filename=linechart_filename) }}" width="100%" height="400px" frameborder="0"></iframe>
         </div>
     </div>
 </div>
@@ -33,18 +33,17 @@
 
     for (var i = 0; i < images.length; i++) {
         images[i].onclick = function(){
-            modal.style.display = "block";
-            modalImg.src = this.src;
-            captionText.innerHTML = this.alt;
+            if (modal.style.display === "block") {
+                modal.style.display = "none";
+            } else {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+                captionText.innerHTML = this.alt;
+                modalImg.style.transform = "scale(3)"; // Powiększenie na kliknięcie
+            }
         }
     }
-        // Kiedy użytkownik kliknie gdziekolwiek wewnątrz modala, zamknij go
-    modal.onclick = function(event) {
-        // Sprawdź, czy kliknięcie nastąpiło poza obrazem modalnym
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
+
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
 
@@ -52,5 +51,8 @@
     span.onclick = function() { 
         modal.style.display = "none";
     }
+
+    // Add transition effect
+    modalImg.style.transition = "transform 0.6s ease";
 </script>
 {% endblock %}

@@ -37,6 +37,8 @@ if __name__ == '__main__':
         os.path.join(current_dir, "transform_headlines.py"),
         os.path.join(current_dir, "analyze_headlines.py"),
         os.path.join(current_dir, "bar_chart.py"),
+        os.path.join(current_dir, "bar_chart_html.py"),
+        os.path.join(current_dir, "generate_wordcloud_html.py"),
         os.path.join(current_dir, "generate_wordcloud.py")
     ]
 

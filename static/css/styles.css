@@ -1,9 +1,18 @@
+body {
+    background-color: #1C1A2B  !important;;
+    color: #f1f1f1  !important;;
+    margin: 0;
+    padding: 0;
+}
+
+
 body, html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
     background-color: #1C1A2B; /* Tło części prawej */
     color: #FFFFFF; /* Kolor czcionki na biały */
+    box-sizing: border-box; /* Dodanie box-sizing do elementów */
 }
 
 #sidebar {
@@ -15,12 +24,14 @@ body, html {
     padding: 20px 10px;
 }
 
+
 #main-content {
     margin-left: 220px; /* Zwiększenie marginesu po lewej stronie */
     padding: 20px;
     background-color: #1C1A2B; /* Tło części prawej */
     min-height: 100vh;
     color: #FFFFFF; /* Kolor czcionki na biały */
+    width: calc(100% - 220px); /* Dynamiczne obliczenie szerokości */
 }
 
 ul {
@@ -152,3 +163,22 @@ ul li a:hover {
     padding: 10px 0;
     height: 150px;
 }
+
+
+.container.mt-5 {
+    background-color: #1C1A2B; /* Przykładowy kolor tła */
+    padding: 20px; /* Dodanie przestrzeni wewnątrz kontenera */
+    width: 100%; /* Kontener na pełną szerokość */
+    margin: auto; /* Wyśrodkowanie kontenera */
+}
+
+.container, .image-container {
+    margin: 0;
+    padding: 0;
+}
+
+/* Ustawienie tła dla elementów zawierających obrazy, jeśli to konieczne */
+.image-container {
+    background-color: #1C1A2B;
+}
+

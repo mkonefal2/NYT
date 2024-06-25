@@ -39,7 +39,7 @@ class BarChartGenerator:
 
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
-        plot_path = os.path.join(self.output_dir, f"common_words_plot_{self.year}_{self.month}.png")
+        plot_path = os.path.join(self.output_dir, f"common_words_plot_{self.year}_{self.month:02d}.png")
         plt.savefig(plot_path, facecolor=fig.get_facecolor())
         print(f"Plot saved to {plot_path}")
 
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     parser.add_argument('year', type=int, help='Year of the data')
     parser.add_argument('month', type=int, help='Month of the data')
     parser.add_argument('--db_path', type=str, default='C:\\Projekty\\NYT\\data\\nyt_articles.db', help='Path to the DuckDB database')
-    parser.add_argument('--output_dir', type=str, default=os.path.join(os.path.dirname(__file__), '../../static/plots'), help='Directory to save the output plots')
+    parser.add_argument('--output_dir', type=str, default=os.path.join(os.path.dirname(__file__), 'C:\\Projekty\\NYT\\static\\plots'), help='Directory to save the output plots')
 
     args = parser.parse_args()
     generator = BarChartGenerator(args.db_path, args.output_dir, args.year, args.month)
