@@ -15,11 +15,22 @@ def get_previous_month_filename(filename_template):
 
 @main.route('/')
 def index():
-    wordcloud_filename = get_previous_month_filename('common_words_cloud_%Y_%#m.png')
-    linechart_filename = get_previous_month_filename('common_words_plot_%Y_%#m.png')
-    
+    wordcloud_filename = get_previous_month_filename('plots/common_words_cloud_%Y_%m.html')
+    linechart_filename = get_previous_month_filename('plots/common_words_plot_%Y_%m.html')
+
     logging.info(f"Word Cloud file: {wordcloud_filename}")
     logging.info(f"Line Chart file: {linechart_filename}")
+
+    wordcloud_path = os.path.join(main.static_folder, wordcloud_filename)
+    linechart_path = os.path.join(main.static_folder, linechart_filename)
+
+    if os.path.exists(wordcloud_path) and os.path.exists(linechart_path):
+        logging.info("Both files exist.")
+    else:
+        if not os.path.exists(wordcloud_path):
+            logging.error(f"Word Cloud file not found: {wordcloud_path}")
+        if not os.path.exists(linechart_path):
+            logging.error(f"Line Chart file not found: {linechart_path}")
     
     return render_template('index.html', wordcloud_filename=wordcloud_filename, linechart_filename=linechart_filename)
 
