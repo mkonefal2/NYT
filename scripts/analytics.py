@@ -47,6 +47,8 @@ def execute_query(query):
 st.title('Headline Analysis of the Last Month')
 
 # Inject CSS to style the page
+
+
 st.markdown(
     """
     <style>
@@ -63,10 +65,11 @@ st.markdown(
     h1 {
         margin-top: 2rem;
     }
+    button[title="View fullscreen"]{
+        visibility: hidden;}
     </style>
-    """,
-    unsafe_allow_html=True,
-)
+    """, unsafe_allow_html=True)
+
 
 # Sidebar for navigation
 st.sidebar.title('Navigation')
@@ -78,10 +81,12 @@ if option == 'Headline Analysis of the Last Month':
 
     wordcloud_filename = get_previous_month_filename('common_words_cloud_%Y_%m.png')
     wordcloud_path = os.path.join('static/plots', wordcloud_filename)
-
+    
     if os.path.exists(wordcloud_path):
-        wordcloud_image = Image.open(wordcloud_path)
-        st.image(wordcloud_image, caption='Word Cloud')
+        col1, col2 = st.columns([1, 3])  # Tworzy dwie kolumny, gdzie druga kolumna jest szersza
+        with col2:  # Używa drugiej kolumny do wyświetlenia obrazu
+            wordcloud_image = Image.open(wordcloud_path)
+            st.image(wordcloud_image, caption='Word Cloud')
     else:
         st.error(f"Word Cloud file not found: {wordcloud_path}")
 
@@ -187,8 +192,6 @@ elif option == 'SQL Analysis':
         show_articles_by_news_desk = st.button('Articles by News Desk')
     with col5:
         show_articles_by_word_count_range = st.button('Articles by Word Count Range')
-    with col6:
-        show_avg_word_count_by_source = st.button('Average Word Count by Source')
 
     st.write("")
 
@@ -249,14 +252,3 @@ elif option == 'SQL Analysis':
         with col2:
             st.bar_chart(data.set_index('word_count_range'))
 
-    # Button and results for "Average Word Count by Source"
-    if show_avg_word_count_by_source:
-        query = load_query('sql/avg_word_count_by_source.sql')
-        data = execute_query(query)
-        col1, col2 = st.columns([1, 3])  # Adjust width ratios
-        
-        with col1:
-            st.write(data)
-
-        with col2:
-            st.bar_chart(data.set_index('source'))
