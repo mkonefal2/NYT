@@ -7,56 +7,59 @@ This project implements an ETL pipeline to fetch and analyze articles from the N
 
 ```
 NYT/
-│
+├── .env
+├── .git/
+├── .gitignore
+├── README.md
+├── requirements.txt
+├── run.py
 ├── app/
 │   ├── __pycache__/
 │   ├── templates/
 │   │   ├── base.html
 │   │   ├── data.html
 │   │   ├── etl.html
-│   │   ├── index.html
+│   │   └── index.html
 │   ├── __init__.py
-│   ├── routes.py
-│
+│   └── routes.py
 ├── data/
-│   ├── common_words_2023-12.csv
-│   ├── common_words_2024-05.csv
-│   ├── lastm_headline_analysis_2024-05.csv
-│   ├── nyt_articles.db
-│
+│   ├── articles.db
+│   ├── common_words_YYYY-MM.csv
+│   └── headline_analysis_YYYY-MM.csv
 ├── logs/
-│   ├── data_fetch.log
-│
+│   └── data_fetch.log
 ├── notebooks/
-│   ├── view_all_articles.ipynb
-│
+│   └── view_all_articles.ipynb
 ├── scripts/
 │   ├── __pycache__/
-│   ├── word_count_headline_analysis/
-│   │   ├── analyze_headlines.py
-│   ├── articles.py
-│   ├── bar_chart.py
-│   ├── generate_wordcloud.py
-│   ├── run_etl.py
-│   ├── transform_headlines.py
+│   ├── analytics.py
 │   ├── drop_all_tables.py
-│
+│   └── word_count_headline_analysis/
+│       ├── analyze_headlines.py
+│       ├── articles.py
+│       ├── bar_chart.py
+│       ├── bar_chart_html.py
+│       ├── generate_wordcloud.py
+│       ├── generate_wordcloud_html.py
+│       ├── run_etl.py
+│       └── transform_headlines.py
 ├── sql/
-│
-├── static/
-│   ├── css/
-│   │   ├── styles.css
-│   │   ├── test.css
-│   ├── plots/
-│       ├── common_words_cloud_YYYY_M.png
-│       ├── common_words_plot_YYYY_M.png
-│
-├── .env
-├── .gitignore
-├── README.md
-├── requirements.txt
-├── run.py
-
+│   ├── articles_by_news_desk.sql
+│   ├── articles_by_source.sql
+│   ├── articles_by_type.sql
+│   ├── articles_by_word_count_range.sql
+│   ├── articles_per_month.sql
+│   ├── avg_word_count_by_source.sql
+│   ├── common_words_plot_last_month.sql
+│   └── top_headlines.sql
+└── static/
+    ├── css/
+    │   └── styles.css
+    └── plots/
+        ├── common_words_cloud_YYYY-MM.html
+        ├── common_words_cloud_YYYY-MM.png
+        ├── common_words_plot_YYYY-MM.html
+        └── common_words_plot_YYYY-MM.png
 ```
 
 ## Getting Started
@@ -109,5 +112,5 @@ Output will be visible in :
 
 You can also run web app 
 ```
-python ./scripts/run.py
+python -m streamlit run .\scripts\analytics.py
 ```
