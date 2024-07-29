@@ -4,4 +4,4 @@ tests
 venv/
 notebooks/view_all_articles.ipynb
 static/plots/*
-data/nyt_articles.db
+data/*
