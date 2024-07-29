@@ -99,9 +99,9 @@ if __name__ == '__main__':
     parser.add_argument('month', type=int, help='Month of the articles to fetch')
     args = parser.parse_args()
 
-    dotenv_path = 'C:\\Projekty\\NYT\\.env'
-    db_path = 'C:\\Projekty\\NYT\\data\\nyt_articles.db'
-    log_directory = 'C:\\Projekty\\NYT\\logs'
+    dotenv_path = 'D:\\Projekty\\NYT\\.env'
+    db_path = 'D:\\Projekty\\NYT\\data\\nyt_articles.db'
+    log_directory = 'D:\\Projekty\\NYT\\logs'
 
     etl = NYTArticleETL(dotenv_path, db_path, log_directory, args.year, args.month)
     etl.run()

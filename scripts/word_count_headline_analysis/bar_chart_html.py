@@ -47,7 +47,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate bar chart for a specified month.')
     parser.add_argument('year', type=int, help='Year of the data')
     parser.add_argument('month', type=int, help='Month of the data')
-    parser.add_argument('--db_path', type=str, default='C:\\Projekty\\NYT\\data\\nyt_articles.db', help='Path to the DuckDB database')
+    parser.add_argument('--db_path', type=str, default='D:\\Projekty\\NYT\\data\\nyt_articles.db', help='Path to the DuckDB database')
     parser.add_argument('--output_dir', type=str, default=os.path.join(os.path.dirname(__file__), '../../static/plots'), help='Directory to save the output plots')
 
     args = parser.parse_args()

@@ -1,8 +1,8 @@
 requests
 pandas
 duckdb
-dotenv
+python-dotenv
 matplotlib
 wordcloud
 streamlit
-Pillow 
+Pillow

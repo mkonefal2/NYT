@@ -1,4 +1,5 @@
 # Ignore .env file
 .env
 tests
+venv.
 notebooks/view_all_articles.ipynb

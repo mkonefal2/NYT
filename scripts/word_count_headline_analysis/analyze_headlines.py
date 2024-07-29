@@ -76,8 +76,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Analyze NYT headlines for common words.')
     parser.add_argument('year', type=int, help='Year of the articles to analyze')
     parser.add_argument('month', type=int, help='Month of the articles to analyze')
-    parser.add_argument('--db_path', type=str, default='C:\\Projekty\\NYT\\data\\nyt_articles.db', help='Path to the DuckDB database')
-    parser.add_argument('--output_dir', type=str, default='C:\\Projekty\\NYT\\data', help='Directory to save the output CSV')
+    parser.add_argument('--db_path', type=str, default='D:\\Projekty\\NYT\\data\\nyt_articles.db', help='Path to the DuckDB database')
+    parser.add_argument('--output_dir', type=str, default='D:\\Projekty\\NYT\\data', help='Directory to save the output CSV')
 
     args = parser.parse_args()
 
