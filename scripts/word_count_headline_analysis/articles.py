@@ -58,6 +58,16 @@ class NYTArticleETL:
         ''')
         logging.info("Articles table ensured.")
 
+    def new_entries_exist(self, con):
+        logging.info("Checking for new entries...")
+        query = f"""
+            SELECT COUNT(*) FROM articles 
+            WHERE strftime('%Y', pub_date) = '{self.year}' AND strftime('%m', pub_date) = '{self.month:02d}'
+        """
+        result = con.execute(query).fetchone()[0]
+        logging.info(f"Number of entries found: {result}")
+        return result == 0
+
     def filter_existing_articles(self, con, df):
         logging.info("Filtering out articles that already exist in the database...")
         existing_ids = con.execute('SELECT _id FROM articles').fetchdf()['_id'].tolist()
@@ -81,17 +91,22 @@ class NYTArticleETL:
             logging.info("No new articles to add.")
 
     def run(self):
-        logging.info("Connecting to DuckDB...")
-        con = duckdb.connect(database=self.db_path)
-        logging.info("Connected to DuckDB.")
+            logging.info("Connecting to DuckDB...")
+            con = duckdb.connect(database=self.db_path)
+            logging.info("Connected to DuckDB.")
 
-        self.ensure_table_exists(con)
+            self.ensure_table_exists(con)
 
-        df = self.fetch_articles()
-        df_filtered = self.filter_existing_articles(con, df)
-        self.insert_articles(con, df_filtered)
-        
-        con.close()
+            if not self.new_entries_exist(con):
+                logging.info("No new entries found. ETL process will not run.")
+                con.close()
+                return
+
+            df = self.fetch_articles()
+            df_filtered = self.filter_existing_articles(con, df)
+            self.insert_articles(con, df_filtered)
+            
+            con.close()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='ETL for NYT articles.')

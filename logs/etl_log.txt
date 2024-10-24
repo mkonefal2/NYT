@@ -59,3 +59,93 @@ ETL process completed successfully.
 Error:
 
 --------------------------------------------------
+2024-08-10 12:38:31.317580
+Output:
+Successfully ran D:\Projekty\NYT\scripts\word_count_headline_analysis\articles.py
+
+Successfully ran D:\Projekty\NYT\scripts\word_count_headline_analysis\transform_headlines.py
+Data saved to D:\Projekty\NYT\data\headline_analysis_2024-08.csv
+
+Successfully ran D:\Projekty\NYT\scripts\word_count_headline_analysis\analyze_headlines.py
+Data saved to D:\Projekty\NYT\data\common_words_2024-08.csv and table common_words_2024-08 created in DuckDB with a date column
+
+Successfully ran D:\Projekty\NYT\scripts\word_count_headline_analysis\bar_chart.py
+Plot saved to D:\Projekty\NYT\static\plots\common_words_plot_2024_08.png
+
+Successfully ran D:\Projekty\NYT\scripts\word_count_headline_analysis\bar_chart_html.py
+Plot saved to D:\Projekty\NYT\scripts\word_count_headline_analysis\../../static/plots\common_words_plot_2024_08.html
+
+Successfully ran D:\Projekty\NYT\scripts\word_count_headline_analysis\generate_wordcloud.py
+Word cloud saved to D:\Projekty\NYT\static\plots\common_words_cloud_2024_08.png
+
+ETL process completed successfully.
+
+Error:
+
+--------------------------------------------------
+2024-08-10 18:34:27.449593
+Output:
+Error running D:\Projekty\NYT\scripts\word_count_headline_analysis\articles.py
+Traceback (most recent call last):
+  File "D:\Projekty\NYT\scripts\word_count_headline_analysis\articles.py", line 121, in <module>
+    etl.run()
+  File "D:\Projekty\NYT\scripts\word_count_headline_analysis\articles.py", line 99, in run
+    if not self.new_entries_exist(con):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: NYTArticleETL.new_entries_exist() takes 1 positional argument but 2 were given
+
+ETL process encountered an error.
+
+Error:
+
+--------------------------------------------------
+2024-08-10 18:34:36.573282
+Output:
+Error running D:\Projekty\NYT\scripts\word_count_headline_analysis\articles.py
+Traceback (most recent call last):
+  File "D:\Projekty\NYT\scripts\word_count_headline_analysis\articles.py", line 121, in <module>
+    etl.run()
+  File "D:\Projekty\NYT\scripts\word_count_headline_analysis\articles.py", line 99, in run
+    if not self.new_entries_exist(con):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: NYTArticleETL.new_entries_exist() takes 1 positional argument but 2 were given
+
+ETL process encountered an error.
+
+Error:
+
+--------------------------------------------------
+2024-08-10 18:35:16.563010
+Output:
+Error running D:\Projekty\NYT\scripts\word_count_headline_analysis\articles.py
+Traceback (most recent call last):
+  File "D:\Projekty\NYT\scripts\word_count_headline_analysis\articles.py", line 121, in <module>
+    etl.run()
+  File "D:\Projekty\NYT\scripts\word_count_headline_analysis\articles.py", line 99, in run
+    if not self.new_entries_exist(con):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: NYTArticleETL.new_entries_exist() takes 1 positional argument but 2 were given
+
+ETL process encountered an error.
+
+Error:
+
+--------------------------------------------------
+2024-08-10 18:40:44.033995
+Output:
+
+Data saved to D:\Projekty\NYT\data\headline_analysis_2024-07.csv
+
+Data saved to D:\Projekty\NYT\data\common_words_2024-07.csv and table common_words_2024-07 created in DuckDB with a date column
+
+Plot saved to D:\Projekty\NYT\static\plots\common_words_plot_2024_07.png
+
+Plot saved to D:\Projekty\NYT\scripts\word_count_headline_analysis\../../static/plots\common_words_plot_2024_07.html
+
+Word cloud saved to D:\Projekty\NYT\static\plots\common_words_cloud_2024_07.png
+
+ETL process completed successfully.
+
+Error:
+
+--------------------------------------------------

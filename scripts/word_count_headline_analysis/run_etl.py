@@ -5,15 +5,13 @@ import datetime
 import time
 
 def run_script(script, year, month):
-    result = subprocess.run(["python", script, str(year), str(month)], capture_output=True, text=True)
+    result = subprocess.run(['python', script, str(year), str(month)], capture_output=True, text=True)
     if result.returncode != 0:
         print(f"Error running {script}")
         print(result.stderr)
         return False
-    else:
-        print(f"Successfully ran {script}")
-        print(result.stdout)
-        return True
+    print(result.stdout)
+    return True
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run ETL process for a selected month.')

@@ -88,7 +88,6 @@ st.markdown(
         visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
-
 # Sidebar for Load Data panel
 st.sidebar.title('Load Data')
 db_path = os.path.join('data', 'nyt_articles.db')
@@ -124,7 +123,25 @@ if st.sidebar.button('Run ETL'):
         if result.returncode == 0:
             st.sidebar.success('ETL script executed successfully')
         else:
-            st.sidebar.error(f"ETL script error. Check logs for details.")
+            st.sidebar.error('ETL script execution failed')
+
+if st.sidebar.button('Drop Data'):
+    # Drop data for the selected month
+    try:
+        query = f"""
+            DELETE FROM articles 
+            WHERE strftime('%Y', pub_date) = '{year}' AND strftime('%m', pub_date) = '{month:02d}'
+        """
+        duckdb_conn = duckdb.connect(database=db_path)
+        duckdb_conn.execute(query)
+        duckdb_conn.close()
+        st.sidebar.success(f"Data for {year}-{month:02d} dropped successfully.")
+    except Exception as e:
+        st.sidebar.error(f"Error dropping data: {e}")
+
+
+
+
 
 # Page for word cloud analysis and SQL analysis
 st.header('Last Month Words Analysis')
