@@ -15,11 +15,6 @@ NYT/
 ├── run.py
 ├── app/
 │   ├── __pycache__/
-│   ├── templates/
-│   │   ├── base.html
-│   │   ├── data.html
-│   │   ├── etl.html
-│   │   └── index.html
 │   ├── __init__.py
 │   └── routes.py
 ├── data/
