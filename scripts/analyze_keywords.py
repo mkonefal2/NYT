@@ -17,7 +17,12 @@ def analyze_headline_keywords(year, month, db_path, output_dir):
     headlines = con.execute(query).fetchall()
     headlines = [str(headline[0]) for headline in headlines if headline[0] is not None]
 
-    stopwords = {...} 
+    stopwords = {
+        'a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', 'an', 'and', 'any', 'are', 'aren\'t', 'as', 'at',
+        'be', 'because', 'been', 'before', 'being', 'below', 'between', 'both', 'but', 'by', 'can', 'can\'t', 'come', 'could',
+        'couldn\'t', 'did', 'didn\'t', 'do', 'does', 'doesn\'t', 'doing', 'don\'t', 'down', 'during', 'each', 'few', 'for',
+        'from', 'further', 'had', 'hadn\'t', 'has', 'hasn\'t', 'have', 'haven\'t', 'having', 'he', 'he\'d', 'he\'ll', 'he\'s'
+    }
 
     words = re.findall(r'\b\w+\b', ' '.join(headlines).lower())
     words = [w for w in words if w not in stopwords]
