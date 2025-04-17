@@ -1,0 +1,7 @@
+apache-airflow==2.8.1
+apache-airflow-providers-duckdb
+requests==2.31.0
+pandas==2.2.1
+duckdb==0.10.0
+python-dotenv==1.0.1
+python-dateutil==2.8.2
