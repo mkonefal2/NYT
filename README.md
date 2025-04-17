@@ -1,111 +1,112 @@
+Oczywiście! Oto angielska wersja pliku `README.md`:
 
-# NYT ETL Pipeline
+---
 
-This project implements an ETL pipeline to fetch and analyze articles from the New York Times API.
+```markdown
+# 📰 NYT Headlines Pipeline with Airflow
 
-# Project Structure
+A data pipeline for analyzing New York Times article headlines using Apache Airflow, DuckDB, and the NYT Archive API.
+
+---
+
+## 🧩 Features
+
+The pipeline consists of three steps:
+
+1. **fetch_articles.py**  
+   ➤ Downloads articles from the NYT API for a given month and stores them in a DuckDB database.
+
+2. **transform_headlines.py**  
+   ➤ Filters and extracts headlines from that month into a dedicated table and CSV file.
+
+3. **analyze_keywords.py**  
+   ➤ Analyzes the most frequent words in the headlines and saves the results to DuckDB and a CSV.
+
+---
+
+## 🗂 Project Structure
 
 ```
-NYT/
-├── .env
-├── .git/
-├── .gitignore
-├── README.md
-├── requirements.txt
-├── run.py
-├── app/
-│   ├── __pycache__/
-│   ├── __init__.py
-│   └── routes.py
-├── data/
-│   ├── articles.db
-│   ├── common_words_YYYY-MM.csv
-│   └── headline_analysis_YYYY-MM.csv
-├── logs/
-│   └── data_fetch.log
-├── notebooks/
-│   └── view_all_articles.ipynb
+nyt_airflow_project/
+├── airflow/
+│   └── dags/
+│       └── nyt_articles_pipeline.py
 ├── scripts/
-│   ├── __pycache__/
-│   ├── analytics.py
-│   ├── drop_all_tables.py
-│   └── word_count_headline_analysis/
-│       ├── analyze_headlines.py
-│       ├── articles.py
-│       ├── bar_chart.py
-│       ├── bar_chart_html.py
-│       ├── generate_wordcloud.py
-│       ├── generate_wordcloud_html.py
-│       ├── run_etl.py
-│       └── transform_headlines.py
-├── sql/
-│   ├── articles_by_news_desk.sql
-│   ├── articles_by_source.sql
-│   ├── articles_by_type.sql
-│   ├── articles_by_word_count_range.sql
-│   ├── articles_per_month.sql
-│   ├── avg_word_count_by_source.sql
-│   ├── common_words_plot_last_month.sql
-│   └── top_headlines.sql
-└── static/
-    ├── css/
-    │   └── styles.css
-    └── plots/
-        ├── common_words_cloud_YYYY-MM.html
-        ├── common_words_cloud_YYYY-MM.png
-        ├── common_words_plot_YYYY-MM.html
-        └── common_words_plot_YYYY-MM.png
+│   ├── fetch_articles.py
+│   ├── transform_headlines.py
+│   └── analyze_keywords.py
+├── data/                 ← output CSV files + DuckDB database
+├── logs/                 ← ETL logs
+├── .env                  ← NYT API key
+└── requirements.txt
 ```
 
-## Getting Started
+---
 
-### Prerequisites
+## 🔐 Environment File
 
-- Python 3.9 or higher
-- `pip` package installer
+Create a `.env` file in the project root and add your NYT API key:
 
-### Installation
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/mkonefal2/NYT.git
-cd NYT
+```dotenv
+NYT_API_KEY=your_nyt_api_key_here
 ```
 
-2. Create and activate a virtual environment:
+---
+
+## 🚀 Local Execution (for testing)
 
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-```
+# (Optional) Activate virtual environment
+source venv/bin/activate
 
-3. Install the dependencies:
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
+
+# Test one step manually
+python scripts/fetch_articles.py
 ```
 
-4. Create a `.env` file in the root directory and add your API key:
+---
 
-```plaintext
-NYT_API_KEY=your_actual_api_key_here
-```
+## 🗓 Airflow DAG Configuration
 
-## Usage
+The `nyt_articles_pipeline` DAG runs daily and processes data from the **previous month** relative to the execution date.
 
-To run the ETL pipeline for last month, execute the following script:
+Once Airflow is running, view the DAG at:
 
 ```bash
-python  ./scripts/word_count_headline_analysis/run_etl.py
+airflow webserver
+airflow scheduler
 ```
 
-Output will be visible in :
-```bash
-./static/plots/
+---
+
+## 📊 Output Data
+
+Generated CSV files and DuckDB tables can be found in the `data/` folder, e.g.:
+
+- `headline_analysis_2024-03.csv`
+- `common_words_2024-03.csv`
+- DuckDB tables: `articles`, `headline_analysis_YYYY_MM`, `common_words_YYYY_MM`
+
+---
+
+## 🛠 Requirements
+
+Recommended setup (see `requirements.txt`):
+
+- Python 3.9+
+- Apache Airflow 2.8+
+- DuckDB
+- requests, pandas, dotenv
+
+---
+
+## 📄 License
+
+This project is intended for educational and personal use. Licensed under the MIT License.
 ```
 
-You can also run web app 
-```
-python -m streamlit run .\scripts\analytics.py
-```
+---
+
+Gotowy na `.gitignore`?
