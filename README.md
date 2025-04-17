@@ -1,8 +1,3 @@
-Oczywiście! Oto angielska wersja pliku `README.md`:
-
----
-
-```markdown
 # 📰 NYT Headlines Pipeline with Airflow
 
 A data pipeline for analyzing New York Times article headlines using Apache Airflow, DuckDB, and the NYT Archive API.
@@ -107,6 +102,3 @@ Recommended setup (see `requirements.txt`):
 This project is intended for educational and personal use. Licensed under the MIT License.
 ```
 
----
-
-Gotowy na `.gitignore`?
