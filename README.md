@@ -100,5 +100,4 @@ Recommended setup (see `requirements.txt`):
 ## 📄 License
 
 This project is intended for educational and personal use. Licensed under the MIT License.
-```
 
