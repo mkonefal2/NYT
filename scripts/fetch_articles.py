@@ -1,5 +1,3 @@
-# fetch_articles.py
-
 import requests
 import pandas as pd
 import duckdb
@@ -27,34 +25,24 @@ def fetch_and_store_articles(year, month, db_path, dotenv_path, log_directory):
         def setup_logging(self):
             os.makedirs(self.log_directory, exist_ok=True)
             log_file_path = os.path.join(self.log_directory, 'data_fetch.log')
-            logging.basicConfig(filename=log_file_path, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+            logging.basicConfig(filename=log_file_path, level=logging.INFO,
+                                format='%(asctime)s - %(levelname)s - %(message)s')
 
         def fetch_articles(self):
             url = f'https://api.nytimes.com/svc/archive/v1/{self.year}/{self.month}.json?api-key={self.api_key}'
             response = requests.get(url)
+
+            if response.status_code != 200:
+                logging.error(f"❌ Failed to fetch data from NYT API: {response.status_code} - {response.text}")
+                return pd.DataFrame()
+
             data = response.json()
+            if 'response' not in data or 'docs' not in data['response']:
+                logging.warning(f"⚠️ No 'response.docs' found in NYT data for {self.year}-{self.month:02d}")
+                return pd.DataFrame()
+
             articles = data['response']['docs']
             return pd.DataFrame(articles).astype(str)
-
-        def ensure_table_exists(self, con):
-            con.execute('''
-                CREATE TABLE IF NOT EXISTS articles (
-                    _id TEXT PRIMARY KEY,
-                    web_url TEXT,
-                    snippet TEXT,
-                    lead_paragraph TEXT,
-                    abstract TEXT,
-                    source TEXT,
-                    headline TEXT,
-                    pub_date TIMESTAMP,
-                    document_type TEXT,
-                    news_desk TEXT,
-                    section_name TEXT,
-                    type_of_material TEXT,
-                    word_count INTEGER,
-                    uri TEXT
-                )
-            ''')
 
         def new_entries_exist(self, con):
             query = f"""
@@ -71,25 +59,46 @@ def fetch_and_store_articles(year, month, db_path, dotenv_path, log_directory):
 
         def clean_dataframe(self, df):
             df['headline'] = df['headline'].apply(lambda x: eval(x).get('main') if x else '')
-            columns_to_keep = ['_id', 'web_url', 'snippet', 'lead_paragraph', 'abstract', 'source', 
-                            'headline', 'pub_date', 'document_type', 'news_desk',  
-                            'type_of_material', 'word_count', 'uri']
-            return df[columns_to_keep]
+
+            expected_columns = [
+                '_id', 'web_url', 'snippet', 'lead_paragraph', 'abstract', 'source',
+                'headline', 'pub_date', 'document_type', 'news_desk', 'section_name',
+                'type_of_material', 'word_count', 'uri'
+            ]
+
+            for col in expected_columns:
+                if col not in df.columns:
+                    df[col] = ""
+
+            return df[expected_columns]
 
         def insert_articles(self, con, df_filtered):
             df_filtered = self.clean_dataframe(df_filtered)
             if not df_filtered.empty:
+                con.register('df_filtered', df_filtered)
                 con.execute('INSERT INTO articles SELECT * FROM df_filtered')
+                con.unregister('df_filtered')
+                logging.info(f"✅ Inserted {len(df_filtered)} new articles.")
+            else:
+                logging.info("ℹ️ No new articles to insert.")
 
         def run(self):
             con = duckdb.connect(database=self.db_path)
-            self.ensure_table_exists(con)
+
             if not self.new_entries_exist(con):
+                logging.info("🔁 Data already exists for this period. Skipping insert.")
                 con.close()
                 return
+
             df = self.fetch_articles()
+            if df.empty:
+                logging.warning(f"⚠️ No articles returned for {self.year}-{self.month:02d}. Skipping.")
+                con.close()
+                return
+
             df_filtered = self.filter_existing_articles(con, df)
             self.insert_articles(con, df_filtered)
             con.close()
 
     NYTArticleETL().run()
+
